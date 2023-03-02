@@ -19,16 +19,20 @@ canvas.height = window.innerHeight;
 ctx.strokeStyle = "#BADA55";
 ctx.lineJoin = "round";
 ctx.lineCap = "round";
+ctx.lineWidth = "30"; //increases line width of strokes
+ctx.globalCompositionOperation = "source-in";
 
 //5. we need some variables to check on how are we drawing on canvas
 let isDrawing = false; //flag: when click down = TRUE, when not clicked on button = FALSE
 let lastX = 0; //this sets the starting point at which line is starting to draw
 let lastY = 0; //this sets the ending point at which line is ending
+let hue = 0;
 
 //6. we need a function which takes event object and use for drawing functionality and triggers when we move mouse over the canvas
 function draw(e) {
   if (!isDrawing) return; //return when mouse is not downed
-  console.log(e);
+  // console.log(e);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; //here we are starting the stroke with red
   //7. start a path
   ctx.beginPath();
   //8. we need to start with an X and Y -> this will complete our drawing from X to Y
@@ -46,6 +50,11 @@ function draw(e) {
   */
   // NOTE: ES6 trick - using destructing an array technique - to set two or more variables in one line[for above two lines]
   [lastX, lastY] = [e.offsetX, e.offsetY];
+
+  hue++; //here we are incrementing the hue value and thus changing colors
+  if (hue >= 360) {
+    hue = 0; //setting it to 0 if it exceeds 360 value
+  }
 }
 
 // part of 6
@@ -57,3 +66,9 @@ canvas.addEventListener("mousedown", (e) => {
 canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseup", () => (isDrawing = false));
 canvas.addEventListener("mouseout", () => (isDrawing = false));
+
+// WHAT IS AN HSL: https://mothereffinghsl.com/
+// Its basically an Rainbow and programmatically you can select the pieces of rainbow
+// H: Hue of the rainbow - Red to Red
+// S: Saturation - Tells how bright the color is
+// L: Lighness(from dark to light)
